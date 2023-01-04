@@ -30,13 +30,17 @@ export class ProductsService {
   }
 
   create(payload: CreateProductDto) {
+    console.log(payload);
     this.counterId = this.counterId + 1;
     const newProduct = {
       id: this.counterId,
       ...payload,
     };
     this.products.push(newProduct);
-    return newProduct;
+    return {
+      message: 'accion de crear',
+      payload,
+    };
   }
   update(id: number, payload: UpdateProductDto) {
     const product = this.findOne(id);
