@@ -37,10 +37,7 @@ export class ProductsService {
       ...payload,
     };
     this.products.push(newProduct);
-    return {
-      message: 'accion de crear',
-      payload,
-    };
+    return newProduct;
   }
   update(id: number, payload: UpdateProductDto) {
     const product = this.findOne(id);

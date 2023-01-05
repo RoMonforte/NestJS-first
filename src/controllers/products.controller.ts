@@ -8,11 +8,10 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  // ParseIntPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { ProductsService } from 'src/services/products.service';
-import { ParseIntPipe } from 'src/common/parse-int/parse-int.pipe';
 import { CreateProductDto, UpdateProductDto } from 'src/dtos/products.dto';
 
 @Controller('products')
@@ -30,8 +29,7 @@ export class ProductsController {
 
   @Post()
   create(@Body() payload: CreateProductDto) {
-    this.productsService.create(payload);
-    return payload;
+    return this.productsService.create(payload);
 
   }
 
