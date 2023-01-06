@@ -28,6 +28,14 @@ export class UsersController {
     return this.usersService.findOne(userId);
   }
 
+  @Get(':userId/orders')
+  @HttpCode(HttpStatus.ACCEPTED)
+  getOrders(@Param('userId', ParseIntPipe) userId: number) {
+    return this.usersService.findOneOrder(userId);
+  }
+
+
+
   @Post()
   create(@Body() payload: CreateUserDto) {
     return this.usersService.create(payload);
