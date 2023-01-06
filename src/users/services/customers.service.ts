@@ -10,7 +10,7 @@ export class CustomersService {
   private customers: Customer[] = [
     {
       id: 1,
-      name: 'Jhon',
+      name: 'Jhoaaan',
       lastName: 'Doe',
       phone: '123456',
     },

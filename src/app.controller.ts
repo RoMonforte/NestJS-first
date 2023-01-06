@@ -8,10 +8,11 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
+
   }
 
   @Get('nuevo')
   newEndpoint() {
-    return 'yo soy nuevo';
+    return 'yo soy nuevoaaaasssssss';
   }
 }

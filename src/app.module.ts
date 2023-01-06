@@ -5,10 +5,9 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { DatabaseModule } from './database/database.module';
+import { enviroments } from '../enviroments';
 
 
-const API_KEY = '123.45';
-const API_KEY_PROD = 'prod xyz';
 
 @Module({
   imports: [
@@ -16,17 +15,13 @@ const API_KEY_PROD = 'prod xyz';
     ProductsModule,
     DatabaseModule,
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: enviroments[process.env.NODE_ENV] || '.env',
       isGlobal: true,
     }),
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: 'API_KEY',
-      useValue: process.env.NODE_ENV === 'prod' ? API_KEY_PROD : API_KEY,
-    },
   ],
 })
 export class AppModule {}
