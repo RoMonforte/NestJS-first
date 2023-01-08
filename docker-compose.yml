@@ -5,9 +5,17 @@ services:
     image: postgres:13
     environment:
       - POSTGRES_DB=my_db
-      - POSTRGRES_USER=root
+      - POSTGRES_USER=RmC
       - POSTGRES_PASSWORD=admin123
     ports:
       - '5432:5432'
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - '5050:80'
