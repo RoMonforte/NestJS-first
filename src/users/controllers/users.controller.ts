@@ -22,6 +22,13 @@ export class UsersController {
   getUsers() {
     return this.usersService.findAll();
   }
+
+  @Get('tasks')
+  getTasks() {
+    return this.usersService.getTasks();
+  }
+
+
   @Get(':userId')
   @HttpCode(HttpStatus.ACCEPTED)
   getUser(@Param('userId', ParseIntPipe) userId: number) {

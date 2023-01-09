@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist';
+import { Client } from 'pg';
 
 import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
 import { User } from '../entities/user.entity';
 import { Order } from '../entities/order.entity';
 
 import { ProductsService } from 'src/products/services/products.service';
+import { Inject } from '@nestjs/common/decorators';
 
 
 @Injectable()
@@ -13,6 +15,7 @@ export class UsersService {
   constructor(
     private productsService: ProductsService,
     private configService: ConfigService,
+    @Inject('PG') private clientPg: Client,
   ) {}
 
 
@@ -79,5 +82,17 @@ export class UsersService {
       products: this.productsService.findAll()
 
     }
+  }
+
+  getTasks() {
+    return new Promise((resolve, reject) => {
+      this.clientPg.query('SELECT * FROM tasks', (err, res) => {
+        if(err) {
+          reject(err);
+        }
+        resolve(res.rows);
+      });
+    });
+
   }
 }
