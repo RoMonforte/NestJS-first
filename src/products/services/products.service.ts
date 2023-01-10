@@ -1,62 +1,47 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { CreateProductDto, UpdateProductDto } from 'src/products/dtos/products.dto';
 import { Product } from './../entities/product.entity';
 
 @Injectable()
 export class ProductsService {
-  private counterId = 1;
-  private products: Product[] = [
-    {
-      id: 1,
-      name: 'Product 1',
-      description: 'blabla',
-      price: 122,
-      stock: 12,
-      image: 'url',
-    },
-  ];
+  constructor(@InjectRepository(Product) private productRepo: Repository<Product>,) {
 
-  findAll() {
-    return this.products;
   }
 
-  findOne(id: number) {
-    const product = this.products.find((item) => item.id === id);
+  findAll() {
+    return this.productRepo.find();
+  }
+
+  async findOne(id: any) {
+    const product = await this.productRepo.findOneBy({id:id});
     if (!product) {
       throw new NotFoundException(`Product with id #${id} not found!`);
     }
     return product;
   }
 
-  create(payload: CreateProductDto) {
-    console.log(payload);
-    this.counterId = this.counterId + 1;
-    const newProduct = {
-      id: this.counterId,
-      ...payload,
-    };
-    this.products.push(newProduct);
-    return newProduct;
+  create(data: CreateProductDto) {
+    const newProduct = this.productRepo.create(data);
+    return this.productRepo.save(newProduct);
   }
-  update(id: number, payload: UpdateProductDto) {
-    const product = this.findOne(id);
-    if (product) {
-      const index = this.products.findIndex((item) => item.id === id);
-      this.products[index] = {
-        ...product,
-        ...payload,
-      };
-      return this.products[index];
-    }
-    return null;
+
+  async update(id: any, changes: UpdateProductDto) {
+    const product = await this.productRepo.findOneBy({id:id});
+    this.productRepo.merge(product, changes);
+    return this.productRepo.save(product);
   }
-  remove(id: number) {
-    const index = this.products.findIndex((item) => item.id === id);
-    if (index === -1) {
+ async remove(id: any) {
+    const product = await this.productRepo.findOneBy({id:id});
+    if (!product) {
       throw new NotFoundException(`Product with id #${id} not found!`);
     }
-    this.products.splice(index, 1);
-    return true;
+    this.productRepo.delete(id)
+    return {
+      message: `Product with id # ${id} deleted!`
+    }
+
   }
 }

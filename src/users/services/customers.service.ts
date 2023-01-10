@@ -12,7 +12,7 @@ export class CustomersService {
       id: 1,
       name: 'Jhoaaan',
       lastName: 'Doe',
-      phone: '123456',
+      phone: 'wasd',
     },
   ];
 
