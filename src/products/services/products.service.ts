@@ -16,7 +16,7 @@ export class ProductsService {
   }
 
   async findOne(id: any) {
-    const product = await this.productRepo.findOneBy({id:id});
+    const product = await this.productRepo.findOne(id);
     if (!product) {
       throw new NotFoundException(`Product with id #${id} not found!`);
     }
@@ -29,12 +29,15 @@ export class ProductsService {
   }
 
   async update(id: any, changes: UpdateProductDto) {
-    const product = await this.productRepo.findOneBy({id:id});
+    const product = await this.productRepo.findOne(id);
+    if (!product) {
+      throw new NotFoundException(`Product with id #${id} not found!`);
+    }
     this.productRepo.merge(product, changes);
     return this.productRepo.save(product);
   }
  async remove(id: any) {
-    const product = await this.productRepo.findOneBy({id:id});
+    const product = await this.productRepo.findOne(id);
     if (!product) {
       throw new NotFoundException(`Product with id #${id} not found!`);
     }
