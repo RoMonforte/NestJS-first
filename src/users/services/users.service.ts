@@ -50,8 +50,12 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User with id #${id} not found!`);
     }
-    this.userRepo.merge(user, changes);
-    return this.userRepo.save(user);
+    const isUsed = await this.userRepo.find({ where:{username: changes.username }})
+    if (isUsed.length === 0) {
+      this.userRepo.merge(user, changes);
+      return this.userRepo.save(user);
+    }
+    throw new NotAcceptableException(`User with name ${changes.username} already exists`);
   }
 
   async remove(id: number) {
