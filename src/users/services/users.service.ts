@@ -7,8 +7,6 @@ import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
 import { User } from '../entities/user.entity';
 
 
-
-
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepo: Repository<User>,) {}
@@ -43,6 +41,7 @@ export class UsersService {
     this.userRepo.merge(user, changes);
     return this.userRepo.save(user);
   }
+
   async remove(id: number) {
     const user = await this.userRepo.findOne(id);
     if (!user) {
