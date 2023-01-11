@@ -1,98 +1,77 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config/dist';
-import { Client } from 'pg';
+import { Injectable, NotFoundException, NotAcceptableException  } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 
 import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
 import { User } from '../entities/user.entity';
-import { Order } from '../entities/order.entity';
 
-import { ProductsService } from 'src/products/services/products.service';
-import { Inject } from '@nestjs/common/decorators';
+
 
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private productsService: ProductsService,
-    private configService: ConfigService,
-    @Inject('PG') private clientPg: Client,
-  ) {}
+  constructor(@InjectRepository(User) private userRepo: Repository<User>,) {}
 
-
-  private counterId = 1;
-  private users: User[] = [
-    {
-      id: 1,
-      username: 'AdminGODass',
-      password: '1111',
-      role: 'goaaad',
-    },
-  ];
 
   findAll() {
-    const apiKey = this.configService.get('API_KEY');
-    const dbName = this.configService.get('DATABASE_NAME');
-    console.log(apiKey,dbName);
-    return this.users;
+    return this.userRepo.find();
   }
 
-  findOne(id: number) {
-    const user = this.users.find((item) => item.id === id);
+  async findOne(id: number) {
+    const user = await this.userRepo.findOne(id);
     if (!user) {
       throw new NotFoundException(`User with id #${id} not found!`);
     }
     return user;
   }
 
-  create(payload: CreateUserDto) {
-    console.log(payload);
-    this.counterId = this.counterId + 1;
-    const newUser = {
-      id: this.counterId,
-      ...payload,
-    };
-    this.users.push(newUser);
-    return newUser;
-  }
-  update(id: number, payload: UpdateUserDto) {
-    const user = this.findOne(id);
-    if (user) {
-      const index = this.users.findIndex((item) => item.id === id);
-      this.users[index] = {
-        ...user,
-        ...payload,
-      };
-      return this.users[index];
+  async create(data: CreateUserDto) {
+    const isUsed = await this.userRepo.find({ where:{username: data.username }})
+    if (isUsed.length === 0) {
+      const newUser = this.userRepo.create(data);
+      return this.userRepo.save(newUser);
     }
-    return null;
+    throw new NotAcceptableException(`User with username ${data.username} already exists`);
   }
-  remove(id: number) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
+
+  async update(id: number, changes: UpdateUserDto) {
+    const user = await this.userRepo.findOne(id);
+    if (!user) {
       throw new NotFoundException(`User with id #${id} not found!`);
     }
-    this.users.splice(index, 1);
-    return true;
+    this.userRepo.merge(user, changes);
+    return this.userRepo.save(user);
   }
-  async findOneOrder(id: number) {
-    const user = this.findOne(id);
+  async remove(id: number) {
+    const user = await this.userRepo.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`User with id #${id} not found!`);
+    }
+    this.userRepo.delete(id)
     return {
-      date: new Date(),
-      user,
-      products: await this.productsService.findAll(),
-
+      message: `User with id # ${id} deleted!`
     }
   }
+  // async findOneOrder(id: number) {
+  //   const user = this.findOne(id);
+  //   return {
+  //     date: new Date(),
+  //     user,
+  //     products: await this.productsService.findAll(),
 
-  getTasks() {
-    return new Promise((resolve, reject) => {
-      this.clientPg.query('SELECT * FROM tasks', (err, res) => {
-        if(err) {
-          reject(err);
-        }
-        resolve(res.rows);
-      });
-    });
+  //   }
+  // }
 
-  }
+  // getTasks() {
+  //   return new Promise((resolve, reject) => {
+  //     this.clientPg.query('SELECT * FROM tasks', (err, res) => {
+  //       if(err) {
+  //         reject(err);
+  //       }
+  //       resolve(res.rows);
+  //     });
+  //   });
+
+  // }
 }

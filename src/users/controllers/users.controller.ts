@@ -23,10 +23,10 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('tasks')
-  getTasks() {
-    return this.usersService.getTasks();
-  }
+  // @Get('tasks')
+  // getTasks() {
+  //   return this.usersService.getTasks();
+  // }
 
 
   @Get(':userId')
@@ -35,11 +35,11 @@ export class UsersController {
     return this.usersService.findOne(userId);
   }
 
-  @Get(':userId/orders')
-  @HttpCode(HttpStatus.ACCEPTED)
-  getOrders(@Param('userId', ParseIntPipe) userId: number) {
-    return this.usersService.findOneOrder(userId);
-  }
+  // @Get(':userId/orders')
+  // @HttpCode(HttpStatus.ACCEPTED)
+  // getOrders(@Param('userId', ParseIntPipe) userId: number) {
+  //   return this.usersService.findOneOrder(userId);
+  // }
 
 
 
