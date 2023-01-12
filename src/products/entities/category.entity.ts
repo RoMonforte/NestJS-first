@@ -4,7 +4,10 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
 } from 'typeorm';
+
+import { Product } from './product.entity';
 
 @Entity()
 export class Category {
@@ -31,4 +34,8 @@ export class Category {
     default: () => 'CURRENT_TIMESTAMP',
   })
   updateddAt: Date;
+
+  @ManyToMany(() => Product, (product) => product.categories)
+  products: Product[];
 }
+
