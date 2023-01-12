@@ -1,15 +1,11 @@
 import {
   PrimaryGeneratedColumn,
-  Column,
-  Entity,
-  CreateDateColumn,
   UpdateDateColumn,
+  CreateDateColumn,
   ManyToOne,
-  OneToMany
+  Entity,
+  OneToMany,
 } from 'typeorm';
-
-import { User } from './user.entity';
-import { Product } from 'src/products/entities/product.entity';
 import { Customer } from './customer.entity';
 import { OrderItem } from './order-item.entity';
 
@@ -17,15 +13,6 @@ import { OrderItem } from './order-item.entity';
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ type: 'date' })
-  date: Date;
-
-  @Column({ type: 'varchar' })
-  user: User;
-
-  @Column({ type: 'varchar' })
-  products: Product[];
 
   @CreateDateColumn({
     type: 'timestamptz',
@@ -42,6 +29,6 @@ export class Order {
   @ManyToOne(() => Customer, (customer) => customer.orders)
   customer: Customer;
 
-  @OneToMany(()=> OrderItem, (item) => item.order)
+  @OneToMany(() => OrderItem, (item) => item.order)
   items: OrderItem[];
 }
