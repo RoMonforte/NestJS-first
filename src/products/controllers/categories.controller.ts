@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 
 import { CategoriesService } from 'src/products/services/categories.service';
-import { CreateCategoryDto, UpdateCategoryDto } from 'src/products/dtos/categories.dto';
+import {
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from 'src/products/dtos/categories.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -30,7 +33,6 @@ export class CategoriesController {
   @Post()
   create(@Body() payload: CreateCategoryDto) {
     return this.categoriesService.create(payload);
-
   }
 
   @Put(':id')
