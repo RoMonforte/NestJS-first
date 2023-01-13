@@ -25,19 +25,21 @@ export class User {
   role: string;
 
   @CreateDateColumn({
+    name: 'create_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    name: 'update_at',
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
 
   @OneToOne(() => Customer,(customer) => customer.user, {nullable: true})
-  @JoinColumn()
+  @JoinColumn({name: 'customer_id'})
   customer: Customer
 }
 
