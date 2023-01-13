@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import {
   CreateProductDto,
   UpdateProductDto,
+  FilterProductsDto
 } from 'src/products/dtos/products.dto';
 
 import { Product } from './../entities/product.entity';
@@ -25,7 +26,15 @@ export class ProductsService {
     private brandsService: BrandsService,
   ) {}
 
-  findAll() {
+  findAll(params?: FilterProductsDto) {
+    if (params) {
+      const {limit, offset} = params;
+      return this.productRepo.find({
+        relations: ['brand'],
+        take: limit,
+        skip: offset,
+      });
+    }
     return this.productRepo.find({
       relations: ['brand'],
     });
