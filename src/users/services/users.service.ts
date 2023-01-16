@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, NotAcceptableException  } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 
 import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
@@ -36,6 +37,8 @@ export class UsersService {
     const isUsed = await this.userRepo.find({ where:{username: data.username }})
     if (isUsed.length === 0) {
       const newUser = this.userRepo.create(data);
+      const hashPasword = await bcrypt.hash(newUser.password, 10);
+      newUser.password =  hashPasword;
       if (data.customerId) {
         const customer = await this.customersService.findOne(data.customerId);
         newUser.customer = customer;
@@ -67,6 +70,10 @@ export class UsersService {
     return {
       message: `User with id # ${id} deleted!`
     }
+  }
+
+  findByEmail(username: string) {
+    return this.userRepo.findOne({where: {username}});
   }
   // async findOneOrder(id: number) {
   //   const user = this.findOne(id);

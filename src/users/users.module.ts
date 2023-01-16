@@ -24,7 +24,13 @@ import { Product } from 'src/products/entities/product.entity';
     ProductsModule,
     TypeOrmModule.forFeature([User, Customer, Order, OrderItem, Product]),
   ],
-  controllers: [CustomersController, UsersController, OrdersController, OrderItemController],
+  controllers: [
+    CustomersController,
+    UsersController,
+    OrdersController,
+    OrderItemController,
+  ],
   providers: [CustomersService, UsersService, OrdersService, OrderItemService],
+  exports: [UsersService],
 })
 export class UsersModule {}
