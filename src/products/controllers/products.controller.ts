@@ -12,7 +12,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 import { ProductsService } from '../services/products.service';
 import {
@@ -34,6 +34,7 @@ export class ProductsController {
 
   @Public()
   @Get()
+  @ApiOperation({summary: 'Get all products in the API'})
   getProducts(
     @Query() params: FilterProductsDto,
   ) {
@@ -43,6 +44,7 @@ export class ProductsController {
 
   @Public()
   @Get(':productId')
+  @ApiOperation({summary: 'With the id get a product and see it more detailed'})
   @HttpCode(HttpStatus.ACCEPTED)
   getProduct(@Param('productId', ParseIntPipe) productId: number) {
     return this.productsService.findOne(productId);
@@ -50,30 +52,35 @@ export class ProductsController {
 
   @Roles(Role.ADMIN)
   @Post()
+  @ApiOperation({summary: 'Create a new product.'})
   create(@Body() payload: CreateProductDto) {
     return this.productsService.create(payload);
   }
 
   @Roles(Role.ADMIN)
   @Put(':id')
+  @ApiOperation({summary: 'Edit the data of a product giving their id.'})
   update(@Param('id') id: number, @Body() payload: UpdateProductDto) {
     return this.productsService.update(id, payload);
   }
 
   @Roles(Role.ADMIN)
   @Put(':id/category/add/:categoryId')
+  @ApiOperation({summary: 'Add a category of a product giving their id.'})
   addCategory(@Param('id') id: number, @Param('categoryId', ParseIntPipe) categoryId: number) {
     return this.productsService.addCategoryOfProduct(id, categoryId);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id')
+  @ApiOperation({summary: 'Delete a product giving their id.'})
   delete(@Param('id') id: number) {
     return this.productsService.remove(id);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id/category/remove/:categoryId')
+  @ApiOperation({summary: 'Remove a category of a product giving their id.'})
   deleteCategory(
     @Param('id', ParseIntPipe) id: number,
     @Param('categoryId', ParseIntPipe) categoryId: number,
