@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 import { Request } from 'express';
 
@@ -13,12 +13,12 @@ import { OrdersService } from '../services/orders.service';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('profile')
 @Controller('profile')
-@Controller('profile')
 export class ProfileController {
   constructor(private orderService: OrdersService) {}
 
   @Roles(Role.CUSTOMER)
   @Get('my-orders')
+  @ApiOperation({summary: 'See the order of the account logged in the jwt.'})
   getOrders(@Req() req: Request) {
     const user = req.user as PayloadToken;
     return this.orderService.ordersByCustomer(user.sub);
