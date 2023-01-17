@@ -13,7 +13,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 
 import { ProductsService } from '../services/products.service';
 import {
@@ -21,12 +20,16 @@ import {
   UpdateProductDto,
   FilterProductsDto,
 } from 'src/products/dtos/products.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 @ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
+
+  @Public()
   @Get()
   getProducts(
     @Query() params: FilterProductsDto,
@@ -34,6 +37,8 @@ export class ProductsController {
 
     return this.productsService.findAll(params);
   }
+
+  @Public()
   @Get(':productId')
   @HttpCode(HttpStatus.ACCEPTED)
   getProduct(@Param('productId', ParseIntPipe) productId: number) {
