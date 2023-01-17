@@ -15,7 +15,7 @@ import { Role } from 'src/auth/models/roles.model';
 export class OrderItemController {
   constructor(private itemsService: OrderItemService) {}
 
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER, Role.ADMIN)
   @Post()
   @ApiOperation({summary: 'Add an specified id product to a specified id order.'})
   create(@Body() payload: CreateOrderItemDto) {

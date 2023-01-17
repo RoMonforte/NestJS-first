@@ -13,10 +13,11 @@ import { OrdersService } from '../services/orders.service';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('profile')
 @Controller('profile')
+@Controller('profile')
 export class ProfileController {
   constructor(private orderService: OrdersService) {}
 
-  @Roles(Role.CUSTOMER)
+  @Roles(Role.CUSTOMER, Role.ADMIN)
   @Get('my-orders')
   @ApiOperation({summary: 'See the order of the account logged in the jwt.'})
   getOrders(@Req() req: Request) {
