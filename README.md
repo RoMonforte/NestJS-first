@@ -24,7 +24,9 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript repository.
+
+Currently you can interact with it in [here](https://ecommerce-nest-production.up.railway.app/docs/)
 
 ## Installation
 
