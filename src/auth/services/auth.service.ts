@@ -31,8 +31,4 @@ export class AuthService {
     };
   }
 
-  async getMyUser (id: number) {
-    const user = await this.usersService.findMySelf(id);
-    return user;
-  }
 }
